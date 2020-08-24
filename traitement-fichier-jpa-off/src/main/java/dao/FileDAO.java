@@ -1,11 +1,8 @@
-package repositories;
+package dao;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
 
 import entities.Categorie;
 import entities.Ingredient;
@@ -14,45 +11,24 @@ import entities.Marque;
 import entities.Nutriment;
 import entities.Produit;
 
-
-public class ExctractFileRepo {
-	private static ExctractFileRepo INSTANCE;
-	private static final String PATH = "./file/openFoodFacts.csv";
-
-	private ExctractFileRepo() {}
+public class FileDAO {
+	ExctractFileDAO exctractFileRepo = ExctractFileDAO.getInstance();
 	
-	/**
-	 * Singleton de ExtractFileRepo
-	 * @return
-	 */
-	public static ExctractFileRepo getInstance() {
-		if(ExctractFileRepo.INSTANCE == null) {
-			ExctractFileRepo.INSTANCE = new ExctractFileRepo();
-		}
-		return ExctractFileRepo.INSTANCE;
+	public FileDAO() {
+		// TODO Auto-generated constructor stub
 	}
-	
 	/**
 	 * Lis le fichier open-food-fact
 	 * @return List<Magasin>
 	 * @throws IOException
 	 */
 	public List<Magasin> lireOpenFoodFacts() throws IOException {
-		return this.createResultatFileAggregate(this.getFile());
+		return this.createResultatFileAggregate(exctractFileRepo.getFile());
 	}
 	
-	/**
-	 * Recupere le fichier pour le lire
-	 * @return BufferedReader
-	 * @throws IOException
-	 */
-	private List<String> getFile() throws IOException {
-		File file = new File(ExctractFileRepo.PATH);
-		return FileUtils.readLines(file, "UTF-8");
-	}
 	
 	/**
-	 * Creer les objets à persister à partir du fichier
+	 * Creer les objets brut à persister à partir du fichier
 	 * @param reader
 	 * @return List<Magasin>
 	 * @throws IOException
@@ -64,7 +40,7 @@ public class ExctractFileRepo {
 		// Index 5 out of bounds for length 5
 		lignes.remove(0);
 		for(String line : lignes) {
-			Categorie categorie = new Categorie(id, line.split("\\|", -1)[0]);
+			Categorie categorie = new Categorie(line.split("\\|", -1)[0]);
 			Marque marque = new Marque(line.split("\\|", -1)[1]);
 			Nutriment nutriment = new Nutriment(this.preventOutOfBounds(line, 5), 
 												this.preventOutOfBounds(line, 6), 
@@ -101,6 +77,7 @@ public class ExctractFileRepo {
 		return listFichier;
 	}
 	
+
 	private double preventOutOfBounds(String line, int index) {
 		if(line.split("\\|", -1).length > index) {
 			return this.checkLine(line.split("\\|", -1)[index]);
@@ -139,6 +116,4 @@ public class ExctractFileRepo {
  
         return true;
     }
-	
-	
 }

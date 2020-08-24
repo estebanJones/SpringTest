@@ -14,47 +14,39 @@ import org.apache.commons.lang3.StringUtils;
 import database.ConnectionDatabase;
 import entities.Categorie;
 import entities.Magasin;
-import entities.Marque;
 import entities.Produit;
-import interfaces.IProduitMigration;
+import interfaces.ICategorieMigration;
 import transactiondb.Transaction;
 import utils.StringFormatter;
 
-public class ProduitDAO implements IProduitMigration {
-	MarqueDAO marqueDAO = new MarqueDAO();
-	CategorieDAO categorieDAO = new CategorieDAO();
-
-	public ProduitDAO() {}
+public class CategorieDAO implements ICategorieMigration {
+	
+	public CategorieDAO() {}
+	
 	@Override
 	public void insertCSV(List<Magasin> mag, ConnectionDatabase connection) throws IOException {
 		EntityManager manager = connection.initConnection();
 		Transaction.startTransaction(manager);
-		Set<Produit> produits = this.suppressionDoublonProduit(mag);
-
-		for(Produit p : produits) {
-			System.out.println(p.getCategorie().getId());
-				//manager.persist(p); 
-				
+		
+		Set<Categorie> list = this.suppressionDoublonCategorie(mag);
+		for(Categorie p : list) {
 			
+			manager.persist(p);
 		}
-
 		Transaction.commitTransaction(manager);
 		connection.closeConnection();
 	}
-
 	
-	public Set<Produit> suppressionDoublonProduit(List<Magasin> magasins) {
+	public Set<Categorie> suppressionDoublonCategorie(List<Magasin> magasins) {
 		return magasins.stream()
-					   .map(m -> this.createProduit(m))
+					   .map(m -> this.createCategorie(m))
 					   .distinct()
-					   .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Produit::getNom))));	
+					   .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Categorie::getNom))));
+		
 	}
 	
-	private Produit createProduit(Magasin m) {
-		Produit produit = new Produit(this.formatteNom(m.getProduit().getNom()));
-		produit.setMarque(m.getProduit().getMarque());
-		produit.setCategorie(m.getProduit().getCategorie());
-		return produit;
+	private Categorie createCategorie(Magasin m) {
+		return new Categorie(this.formatteNom(m.getProduit().getCategorie().getNom()));
 	}
 	
 	public String formatteNom(String str) {

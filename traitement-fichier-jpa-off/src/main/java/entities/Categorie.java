@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public class Categorie {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	@Column(name="nom", nullable=false, length=50)
 	private String nom;
@@ -27,10 +27,8 @@ public class Categorie {
 		
 	}
 
-	public Categorie(int id, String nom) {
-		this.id = id;
+	public Categorie(String nom) {
 		this.nom = nom;
-		produits = new ArrayList<>();
 	}
 
 	public int getId() {

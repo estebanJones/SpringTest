@@ -13,13 +13,16 @@ import javax.persistence.Table;
 @Table(name="produit")
 public class Produit {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
+	
 	@Column(name="nom", nullable=false, length=255)
 	private String nom;
+	
 	@ManyToOne
 	@JoinColumn(name="id_categorie")
 	private Categorie categorie;
+	
 	@ManyToOne
 	@JoinColumn(name="id_marque")
 	private Marque marque;

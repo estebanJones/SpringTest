@@ -18,7 +18,7 @@ import entities.Magasin;
 import entities.Marque;
 import entities.Produit;
 import interfaces.IMarqueMigration;
-import repositories.ExctractFileRepo;
+import dao.ExctractFileDAO;
 import transactiondb.Transaction;
 import utils.StringFormatter;
 
@@ -50,11 +50,7 @@ public class MarqueDAO implements IMarqueMigration{
 		return  magasins.stream()
 						.map(m -> new Marque(StringFormatter.sansAccent(StringUtils.substringBefore(m.getProduit().getMarque().getNom(), ","))))
 						.distinct()
-						.collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Marque::getNom))));
-						
+						.collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Marque::getNom))));				
 	}		
 	
-	
-	
-
 }

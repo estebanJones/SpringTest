@@ -15,12 +15,12 @@ import javax.persistence.Table;
 @Table(name="marque")
 public class Marque {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
 	@Column(name="nom", nullable=false, length=50)
 	private String nom;
-	@OneToMany(targetEntity=Produit.class, mappedBy="marque")
+	@OneToMany(mappedBy="marque")
 	private List<Produit> produits;
 	
 	
@@ -30,7 +30,6 @@ public class Marque {
 
 	public Marque(String nom) {
 		this.nom = nom;
-		produits = new ArrayList<>();
 	}
 
 	public int getId() {
