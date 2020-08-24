@@ -2,12 +2,14 @@ package dao;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,17 +29,42 @@ public class ProduitDAO implements IProduitMigration {
 	public ProduitDAO() {}
 	@Override
 	public void insertCSV(List<Magasin> mag, ConnectionDatabase connection) throws IOException {
+		Set<Produit> produitListe = new HashSet<>();
+		Set<Produit> produitListe2 = new HashSet<>();
 		EntityManager manager = connection.initConnection();
 		Transaction.startTransaction(manager);
 		Set<Produit> produits = this.suppressionDoublonProduit(mag);
-
+		Query query = manager.createQuery("SELECT c FROM Categorie c");
+		List<Categorie> c = query.getResultList();
+		
+		Query query1 = manager.createQuery("SELECT m FROM Marque m");
+		List<Marque> m = query1.getResultList();
 		for(Produit p : produits) {
-			System.out.println(p.getCategorie().getId());
-				//manager.persist(p); 
+			c.forEach(e -> {
+				if(e.getNom().equalsIgnoreCase(p.getCategorie().getNom())) {
+					 
+					p.getCategorie().setId(e.getId());
+					p.getCategorie().setNom(e.getNom());
+					produitListe.add(p);
+				}
 				
-			
+			});
 		}
-
+		
+		for(Produit p : produitListe) {
+			m.forEach(e -> {
+				if(e.getNom().equalsIgnoreCase(p.getMarque().getNom())) {
+					Produit produit = new Produit(p.getNom());
+					p.setCategorie(p.getCategorie());
+					p.getMarque().setNom(e.getNom());
+					p.getMarque().setId(e.getId());
+					
+					produitListe2.add(p);
+				}
+			});
+		}
+		
+		produitListe2.forEach(e -> manager.persist(e));
 		Transaction.commitTransaction(manager);
 		connection.closeConnection();
 	}
