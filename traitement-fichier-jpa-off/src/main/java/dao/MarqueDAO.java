@@ -14,11 +14,11 @@ import org.apache.commons.lang3.StringUtils;
 import database.ConnectionDatabase;
 import entities.Magasin;
 import entities.Marque;
-import interfaces.migrationCRUD.IMarqueMigration;
+import interfaces.migrationCRUD.ICRUDMirgration;
 import transactiondb.Transaction;
 import utils.StringFormatter;
 
-public class MarqueDAO implements IMarqueMigration{
+public class MarqueDAO implements ICRUDMirgration{
 
 	public MarqueDAO() {}
 	

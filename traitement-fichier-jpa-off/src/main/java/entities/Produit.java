@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -7,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -20,6 +23,9 @@ public class Produit {
 	@Column(name="nom", nullable=false, length=255)
 	private String nom;
 	
+	@Embedded
+	private Nutriment nutriment;
+	
 	@ManyToOne
 	@JoinColumn(name="id_categorie")
 	private Categorie categorie;
@@ -28,8 +34,11 @@ public class Produit {
 	@JoinColumn(name="id_marque")
 	private Marque marque;
 	
-	@Embedded
-	private Nutriment nutriment;
+	@ManyToMany(mappedBy="produitsAllergenes")
+	private Set<Allergene> allergenes;
+	
+	@ManyToMany(mappedBy="produitAdditifs")
+	private Set<Additif> additifs;
 	
 	public Produit() {
 		
@@ -78,6 +87,23 @@ public class Produit {
 
 	public void setNutriment(Nutriment nutriment) {
 		this.nutriment = nutriment;
+	}
+	
+	
+	public Set<Allergene> getAllergenes() {
+		return allergenes;
+	}
+
+	public void setAllergenes(Set<Allergene> allergenes) {
+		this.allergenes = allergenes;
+	}
+
+	public Set<Additif> getAdditifs() {
+		return additifs;
+	}
+
+	public void setAdditifs(Set<Additif> additifs) {
+		this.additifs = additifs;
 	}
 
 	@Override

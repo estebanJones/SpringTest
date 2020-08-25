@@ -19,11 +19,12 @@ import entities.Magasin;
 import entities.Marque;
 import entities.Produit;
 import interfaces.bddCRUD.IProduitBDD;
-import interfaces.migrationCRUD.IProduitMigration;
+import interfaces.migrationCRUD.ICRUDMirgration;
 import transactiondb.Transaction;
+
 import utils.StringFormatter;
 
-public class ProduitDAO implements IProduitMigration, IProduitBDD {
+public class ProduitDAO implements ICRUDMirgration, IProduitBDD {
 	MarqueDAO marqueDAO = new MarqueDAO();
 	CategorieDAO categorieDAO = new CategorieDAO();
 
@@ -32,19 +33,20 @@ public class ProduitDAO implements IProduitMigration, IProduitBDD {
 	public void insertCSV(List<Magasin> mag, ConnectionDatabase connection) throws IOException {
 		Set<Produit> produitListe = new HashSet<>();
 		Set<Produit> produitListe2 = new HashSet<>();
+		
 		EntityManager manager = connection.initConnection();
 		Transaction.startTransaction(manager);
-		Set<Produit> produits = this.suppressionDoublonProduit(mag);
 		
 		Query query = manager.createQuery("SELECT c FROM Categorie c");
 		List<Categorie> c = query.getResultList();
 		
 		Query query1 = manager.createQuery("SELECT m FROM Marque m");
 		List<Marque> m = query1.getResultList();
+		
+		Set<Produit> produits = this.suppressionDoublonProduit(mag);
 		for(Produit p : produits) {
 			c.forEach(e -> {
 				if(e.getNom().equalsIgnoreCase(p.getCategorie().getNom())) {
-					 
 					p.getCategorie().setId(e.getId());
 					p.getCategorie().setNom(e.getNom());
 					produitListe.add(p);
@@ -62,12 +64,11 @@ public class ProduitDAO implements IProduitMigration, IProduitBDD {
 					p.getMarque().setId(e.getId());
 					
 					produitListe2.add(p);
-					System.out.println(p.getNutriment());
 				}
 			});
 		}
 		
-		produitListe2.forEach(e -> manager.persist(e));
+		//produitListe2.forEach(e -> manager.persist(e));
 		Transaction.commitTransaction(manager);
 		connection.closeConnection();
 	}

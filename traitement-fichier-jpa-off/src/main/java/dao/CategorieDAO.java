@@ -14,11 +14,11 @@ import org.apache.commons.lang3.StringUtils;
 import database.ConnectionDatabase;
 import entities.Categorie;
 import entities.Magasin;
-import interfaces.migrationCRUD.ICategorieMigration;
+import interfaces.migrationCRUD.ICRUDMirgration;
 import transactiondb.Transaction;
 import utils.StringFormatter;
 
-public class CategorieDAO implements ICategorieMigration {
+public class CategorieDAO implements ICRUDMirgration {
 	
 	public CategorieDAO() {}
 	
