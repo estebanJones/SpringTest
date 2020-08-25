@@ -18,11 +18,12 @@ import entities.Categorie;
 import entities.Magasin;
 import entities.Marque;
 import entities.Produit;
-import interfaces.IProduitMigration;
+import interfaces.bddCRUD.IProduitBDD;
+import interfaces.migrationCRUD.IProduitMigration;
 import transactiondb.Transaction;
 import utils.StringFormatter;
 
-public class ProduitDAO implements IProduitMigration {
+public class ProduitDAO implements IProduitMigration, IProduitBDD {
 	MarqueDAO marqueDAO = new MarqueDAO();
 	CategorieDAO categorieDAO = new CategorieDAO();
 
@@ -34,6 +35,7 @@ public class ProduitDAO implements IProduitMigration {
 		EntityManager manager = connection.initConnection();
 		Transaction.startTransaction(manager);
 		Set<Produit> produits = this.suppressionDoublonProduit(mag);
+		
 		Query query = manager.createQuery("SELECT c FROM Categorie c");
 		List<Categorie> c = query.getResultList();
 		
@@ -60,6 +62,7 @@ public class ProduitDAO implements IProduitMigration {
 					p.getMarque().setId(e.getId());
 					
 					produitListe2.add(p);
+					System.out.println(p.getNutriment());
 				}
 			});
 		}
@@ -81,6 +84,7 @@ public class ProduitDAO implements IProduitMigration {
 		Produit produit = new Produit(this.formatteNom(m.getProduit().getNom()));
 		produit.setMarque(m.getProduit().getMarque());
 		produit.setCategorie(m.getProduit().getCategorie());
+		produit.setNutriment(m.getNutriment());
 		return produit;
 	}
 	

@@ -1,36 +1,65 @@
 package entities;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Nutriment {
 	
+	@Column(name="energie100g", nullable=false)
 	private double energie100g;
+	@Column(name="graisse100Gg", nullable=false)
 	private double graisse100g;
+	@Column(name="sucres100g", nullable=false)
 	private double sucres100g;
+	@Column(name="fibres100g", nullable=false)
 	private double fibres100g;
+	@Column(name="proteines100g", nullable=false)
 	private double proteines100g;
+	@Column(name="sel100g", nullable=false)
 	private double sel100g;
+	@Column(name="vitA100g", nullable=false)
 	private double vitA100g;
+	@Column(name="vitD100g", nullable=false)
 	private double vitD100g;
+	@Column(name="vitE100g", nullable=false)
 	private double vitE100g;
+	@Column(name="vitK100g", nullable=false)
 	private double vitK100g;
+	@Column(name="vitC100g", nullable=false)
 	private double vitC100g;
+	@Column(name="vitB1100g", nullable=false)
 	private double vitB1100g;
+	@Column(name="vitB2100g", nullable=false)
 	private double vitB2100g;
+	@Column(name="vitPP100g", nullable=false)
 	private double vitPP100g;
+	@Column(name="vitB6100g", nullable=false)
 	private double vitB6100g;
+	@Column(name="vitB9100g", nullable=false)
 	private double vitB9100g;
+	@Column(name="vitB12100g", nullable=false)
 	private double vitB1200g;
+	@Column(name="calcium100g", nullable=false)
 	private double calcium100g;
+	@Column(name="magnesium100g", nullable=false)
 	private double magnesium100g;
+	@Column(name="iron100g", nullable=false)
 	private double iron100g;
+	@Column(name="fer100g", nullable=false)
 	private double fer100g;
+	@Column(name="betaCarotene100g", nullable=false)
 	private double betaCarotene100g;
-	private double presenceHuilePalme;
+	@Column(name="presenceHuilePalme", nullable=false)
+	private boolean presenceHuilePalme;
+	
+	public Nutriment() {}
 	
 	public Nutriment(double energie100g, double graisse100g, double sucres100g, double fibres100g, double proteines100g,
 			double sel100g, double vitA100g, double vitD100g, double vitE100g, double vitK100g, double vitC100g,
 			double vitB1100g, double vitB2100g, double vitPP100g, double vitB6100g, double vitB9100g, double vitB1200g,
 			double calcium100g, double magnesium100g, double iron100g, double fer100g, double betaCarotene100g,
-			double presenceHuilePalme) {
+			boolean presenceHuilePalme) {
 		this.energie100g = energie100g;
 		this.graisse100g = graisse100g;
 		this.sucres100g = sucres100g;
@@ -189,10 +218,24 @@ public class Nutriment {
 	public void setBetaCarotene100g(double betaCarotene100g) {
 		this.betaCarotene100g = betaCarotene100g;
 	}
-	public double getPresenceHuilePalme() {
+	public boolean getPresenceHuilePalme() {
 		return presenceHuilePalme;
 	}
-	public void setPresenceHuilePalme(double presenceHuilePalme) {
+	public void setPresenceHuilePalme(boolean presenceHuilePalme) {
 		this.presenceHuilePalme = presenceHuilePalme;
 	}
+
+	@Override
+	public String toString() {
+		return "Nutriment [energie100g=" + energie100g + ", graisse100g=" + graisse100g + ", sucres100g=" + sucres100g
+				+ ", fibres100g=" + fibres100g + ", proteines100g=" + proteines100g + ", sel100g=" + sel100g
+				+ ", vitA100g=" + vitA100g + ", vitD100g=" + vitD100g + ", vitE100g=" + vitE100g + ", vitK100g="
+				+ vitK100g + ", vitC100g=" + vitC100g + ", vitB1100g=" + vitB1100g + ", vitB2100g=" + vitB2100g
+				+ ", vitPP100g=" + vitPP100g + ", vitB6100g=" + vitB6100g + ", vitB9100g=" + vitB9100g + ", vitB1200g="
+				+ vitB1200g + ", calcium100g=" + calcium100g + ", magnesium100g=" + magnesium100g + ", iron100g="
+				+ iron100g + ", fer100g=" + fer100g + ", betaCarotene100g=" + betaCarotene100g + ", presenceHuilePalme="
+				+ presenceHuilePalme + "]";
+	}
+	
+	
 }

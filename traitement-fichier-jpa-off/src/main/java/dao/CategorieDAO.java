@@ -14,8 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import database.ConnectionDatabase;
 import entities.Categorie;
 import entities.Magasin;
-import entities.Produit;
-import interfaces.ICategorieMigration;
+import interfaces.migrationCRUD.ICategorieMigration;
 import transactiondb.Transaction;
 import utils.StringFormatter;
 

@@ -1,12 +1,10 @@
 package dao;
 
 import java.io.IOException;
-import java.text.Normalizer;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -16,9 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import database.ConnectionDatabase;
 import entities.Magasin;
 import entities.Marque;
-import entities.Produit;
-import interfaces.IMarqueMigration;
-import dao.ExctractFileDAO;
+import interfaces.migrationCRUD.IMarqueMigration;
 import transactiondb.Transaction;
 import utils.StringFormatter;
 

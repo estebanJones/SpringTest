@@ -4,11 +4,15 @@ public class Magasin {
 	private Produit produit;
 	private Ingredient ingredient;
 	private Nutriment nutriment;
+	private Allergene allergene;
+	private Additif additif;
 	
-	public Magasin(Produit produit, Ingredient ingredient, Nutriment nutriment) {
+	public Magasin(Produit produit, Ingredient ingredient, Nutriment nutriment, Allergene allergene, Additif additif) {
 		this.produit = produit;
 		this.ingredient = ingredient;
 		this.nutriment = nutriment;
+		this.allergene = allergene;
+		this.additif = additif;
 	}
 
 	public Produit getProduit() {
@@ -35,6 +39,22 @@ public class Magasin {
 
 	public void setNutriment(Nutriment nutriment) {
 		this.nutriment = nutriment;
+	}
+	
+	public Allergene getAllergene() {
+		return allergene;
+	}
+
+	public void setAllergene(Allergene allergene) {
+		this.allergene = allergene;
+	}
+
+	public Additif getAdditif() {
+		return additif;
+	}
+
+	public void setAdditif(Additif additif) {
+		this.additif = additif;
 	}
 
 	@Override

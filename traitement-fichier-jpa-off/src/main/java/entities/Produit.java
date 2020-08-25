@@ -1,6 +1,7 @@
 package entities;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +27,9 @@ public class Produit {
 	@ManyToOne
 	@JoinColumn(name="id_marque")
 	private Marque marque;
+	
+	@Embedded
+	private Nutriment nutriment;
 	
 	public Produit() {
 		
@@ -65,6 +69,15 @@ public class Produit {
 
 	public void setMarque(Marque marque) {
 		this.marque = marque;
+	}
+
+	
+	public Nutriment getNutriment() {
+		return nutriment;
+	}
+
+	public void setNutriment(Nutriment nutriment) {
+		this.nutriment = nutriment;
 	}
 
 	@Override

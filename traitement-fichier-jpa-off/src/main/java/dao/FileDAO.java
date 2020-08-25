@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import entities.Additif;
+import entities.Allergene;
 import entities.Categorie;
 import entities.Ingredient;
 import entities.Magasin;
@@ -34,10 +36,9 @@ public class FileDAO {
 	 * @throws IOException
 	 */
 	private List<Magasin> createResultatFileAggregate(List<String> lignes) throws IOException {
-		List<Magasin> listFichier = new ArrayList<>();
+		List<Magasin> listMagasins = new ArrayList<>();
 		
 		int id = 1;
-		// Index 5 out of bounds for length 5
 		lignes.remove(0);
 		for(String line : lignes) {
 			Categorie categorie = new Categorie(line.split("\\|", -1)[0]);
@@ -64,25 +65,36 @@ public class FileDAO {
 												this.preventOutOfBounds(line, 24), 
 												this.preventOutOfBounds(line, 25), 
 												this.preventOutOfBounds(line, 26),
-												this.preventOutOfBounds(line, 27)
+												(this.preventOutOfBounds(line, 27) == 0.0) ? false : true
 										);
 			Produit produit = new Produit(line.split("\\|", -1)[2]);
 			produit.setMarque(marque);
 			produit.setCategorie(categorie);
-			Ingredient ingredient = new Ingredient(id, line.split("\\|", -1)[4]);
-			id++;
-			listFichier.add(new Magasin(produit, ingredient, nutriment));
+			produit.setNutriment(nutriment);
 			
+			Ingredient ingredient = new Ingredient(line.split("\\|", -1)[4]);
+			Allergene allergene = new Allergene(this.prevent(line, 28));
+			Additif additif = new Additif(this.prevent(line, 29));
+			
+			listMagasins.add(new Magasin(produit, ingredient, nutriment, allergene, additif));
 		}
-		return listFichier;
+		return listMagasins;
 	}
 	
 
 	private double preventOutOfBounds(String line, int index) {
 		if(line.split("\\|", -1).length > index) {
-			return this.checkLine(line.split("\\|", -1)[index]);
+			return this.checkDoubleLine(line.split("\\|", -1)[index]);
 		} else {
 			return 0.0;
+		}
+	}
+	
+	private String prevent(String line, int index) {
+		if(line.split("\\|", -1).length > index) {
+			return this.checkStringLine(line.split("\\|", -1)[index]);
+		} else {
+			return "Empty";
 		}
 	}
 	/**
@@ -91,7 +103,7 @@ public class FileDAO {
 	 * @param str
 	 * @return double
 	 */
-	private double checkLine(String str) {
+	private double checkDoubleLine(String str) {
 		double value = 0.0;
 		if(str.isBlank() || str.isEmpty()) {
 			return value;
@@ -99,6 +111,14 @@ public class FileDAO {
 			value = Double.parseDouble(str);
 		}
 		return value;
+	}
+	
+	private String checkStringLine(String str) {
+		if(str.isBlank() || str.isEmpty()) {
+			return "Empty";
+		} else {
+			return str;
+		}
 	}
 	
 	/**

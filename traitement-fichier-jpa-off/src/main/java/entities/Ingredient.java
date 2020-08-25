@@ -4,8 +4,7 @@ public class Ingredient {
 	private int id;
 	private String nom;
 	
-	public Ingredient(int id, String nom) {
-		this.id = id;
+	public Ingredient(String nom) {
 		this.nom = nom;
 	}
 
