@@ -13,7 +13,7 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
 
-import database.ConnectionDatabase;
+import database.ManagerConnection;
 import entities.Categorie;
 import entities.Magasin;
 import entities.Marque;
@@ -21,7 +21,6 @@ import entities.Produit;
 import interfaces.bddCRUD.IProduitBDD;
 import interfaces.migrationCRUD.ICRUDMirgration;
 import transactiondb.Transaction;
-
 import utils.StringFormatter;
 
 public class ProduitDAO implements ICRUDMirgration, IProduitBDD {
@@ -30,57 +29,76 @@ public class ProduitDAO implements ICRUDMirgration, IProduitBDD {
 
 	public ProduitDAO() {}
 	@Override
-	public void insertCSV(List<Magasin> mag, ConnectionDatabase connection) throws IOException {
-		Set<Produit> produitListe = new HashSet<>();
-		Set<Produit> produitListe2 = new HashSet<>();
-		
+	public void insertCSV(List<Magasin> mag, ManagerConnection connection) throws IOException {
 		EntityManager manager = connection.initConnection();
 		Transaction.startTransaction(manager);
 		
-		Query query = manager.createQuery("SELECT c FROM Categorie c");
-		List<Categorie> c = query.getResultList();
-		
-		Query query1 = manager.createQuery("SELECT m FROM Marque m");
-		List<Marque> m = query1.getResultList();
-		
+		List<Object> resultatRequeteCategorie = this.selectAll(manager, "Categorie");
+		List<Object> resultatRequeteMarque = this.selectAll(manager, "Marque");
 		Set<Produit> produits = this.suppressionDoublonProduit(mag);
+		
+		this.produitLinked(resultatRequeteMarque, resultatRequeteCategorie, produits).forEach(e -> {
+			System.out.println(e);
+			//manager.persist(e);
+			}
+		);
+		
+		Transaction.commitTransaction(manager);
+	}
+	
+	public Set<Produit> produitLinked(List<Object> resultatRequeteMarque, List<Object> resultatRequeteCategorie, Set<Produit> produits) {
+		Set<Produit> produitCategorieLinked = this.linkProduitCategorie(resultatRequeteCategorie, produits);
+		return this.linkProduitMarque(resultatRequeteMarque, produitCategorieLinked);
+	}
+	
+	public Set<Produit> linkProduitMarque(List<Object> resultatRequeteMarque, Set<Produit> produits) {
+		Set<Produit> marqueProduitLinked = new HashSet<>();
+		
 		for(Produit p : produits) {
-			c.forEach(e -> {
-				if(e.getNom().equalsIgnoreCase(p.getCategorie().getNom())) {
-					p.getCategorie().setId(e.getId());
-					p.getCategorie().setNom(e.getNom());
-					produitListe.add(p);
+			resultatRequeteMarque.forEach(e -> {
+				Marque marque = (Marque) e;
+				if(marque.getNom().equalsIgnoreCase(p.getMarque().getNom())) {
+					Produit produit = new Produit(p.getNom());
+					p.setCategorie(p.getCategorie());
+					p.getMarque().setNom(marque.getNom());
+					p.getMarque().setId(marque.getId());
+					
+					marqueProduitLinked.add(p);
+				}
+			});
+		}
+		return marqueProduitLinked;
+	}
+	
+	public Set<Produit> linkProduitCategorie(List<Object> resultatRequeteCategorie, Set<Produit> produits) {
+		Set<Produit> categorieProduitLinked = new HashSet<>();
+		
+		for(Produit p : produits) {
+			resultatRequeteCategorie.forEach(e -> {
+				Categorie categorie = (Categorie) e;
+				if(categorie.getNom().equalsIgnoreCase(p.getCategorie().getNom())) {
+				p.getCategorie().setId(categorie.getId());
+				p.getCategorie().setNom(categorie.getNom());
+				categorieProduitLinked.add(p);
 				}
 				
 			});
 		}
-		
-		for(Produit p : produitListe) {
-			m.forEach(e -> {
-				if(e.getNom().equalsIgnoreCase(p.getMarque().getNom())) {
-					Produit produit = new Produit(p.getNom());
-					p.setCategorie(p.getCategorie());
-					p.getMarque().setNom(e.getNom());
-					p.getMarque().setId(e.getId());
-					
-					produitListe2.add(p);
-				}
-			});
-		}
-		
-		//produitListe2.forEach(e -> manager.persist(e));
-		Transaction.commitTransaction(manager);
-		connection.closeConnection();
+		return categorieProduitLinked;
 	}
-
 	
 	public Set<Produit> suppressionDoublonProduit(List<Magasin> magasins) {
 		return magasins.stream()
-					   .map(m -> this.createProduit(m))
+					   .map(m -> m.getProduit())
 					   .distinct()
 					   .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Produit::getNom))));	
 	}
 	
+	/**
+	 * 
+	 * @param m
+	 * @return
+	 */
 	private Produit createProduit(Magasin m) {
 		Produit produit = new Produit(this.formatteNom(m.getProduit().getNom()));
 		produit.setMarque(m.getProduit().getMarque());

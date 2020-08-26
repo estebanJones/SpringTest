@@ -1,7 +1,6 @@
 package transactiondb;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 
 public class Transaction {
 	/**

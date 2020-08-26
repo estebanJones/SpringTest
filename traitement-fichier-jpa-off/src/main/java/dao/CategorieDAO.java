@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
 
-import database.ConnectionDatabase;
+import database.ManagerConnection;
 import entities.Categorie;
 import entities.Magasin;
 import interfaces.migrationCRUD.ICRUDMirgration;
@@ -23,7 +23,7 @@ public class CategorieDAO implements ICRUDMirgration {
 	public CategorieDAO() {}
 	
 	@Override
-	public void insertCSV(List<Magasin> mag, ConnectionDatabase connection) throws IOException {
+	public void insertCSV(List<Magasin> mag, ManagerConnection connection) throws IOException {
 		EntityManager manager = connection.initConnection();
 		Transaction.startTransaction(manager);
 		
@@ -33,7 +33,6 @@ public class CategorieDAO implements ICRUDMirgration {
 			manager.persist(p);
 		}
 		Transaction.commitTransaction(manager);
-		connection.closeConnection();
 	}
 	
 	public Set<Categorie> suppressionDoublonCategorie(List<Magasin> magasins) {

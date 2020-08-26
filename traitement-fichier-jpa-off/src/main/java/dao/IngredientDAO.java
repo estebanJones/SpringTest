@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
 
-import database.ConnectionDatabase;
+import database.ManagerConnection;
 import entities.Ingredient;
 import entities.Magasin;
 import interfaces.migrationCRUD.ICRUDMirgration;
@@ -24,18 +24,15 @@ public class IngredientDAO implements ICRUDMirgration {
 	
 	
 	@Override
-	public void insertCSV(List<Magasin> mag, ConnectionDatabase connection) throws IOException {
+	public void insertCSV(List<Magasin> mag, ManagerConnection connection) throws IOException {
 		EntityManager manager = connection.initConnection();
 		Transaction.startTransaction(manager);
 		Set<Ingredient> ingredients = this.suppressionDoublon(mag);
 		
 		for(Ingredient i : ingredients) {
-			System.out.println(i);
-			//manager.persist(i);
+			manager.persist(i);
 		}
-
 		Transaction.commitTransaction(manager);
-		connection.closeConnection();
 	}
 	
 	/**
@@ -57,6 +54,7 @@ public class IngredientDAO implements ICRUDMirgration {
 		magasins.stream()
 				.map(el -> el.getIngredient().getNom().split("-|,|;"))
 				.forEach(str -> {
+					Integer indexChaine = 0;
 					for(String s : str) {
 						// Pour chaque Ingredient je remplace _, *, ) par ""
 						s = s.replaceAll("_", "").replaceAll("\\*", "").replace(")", "").trim().toLowerCase();
@@ -75,11 +73,34 @@ public class IngredientDAO implements ICRUDMirgration {
 							// ^ veut dire en debut de ligne
 							//Cette regex retire les strings de forme e2467...etc
 							s = s.replaceAll("e[0-9]+$|^e[0-9]+$", "");
+							
+							
+							this.isAnInt((char)s.charAt(indexChaine), s, indexChaine);
 							ingredients.add(new Ingredient(s));
 						}
+						indexChaine++;
 					}
+					indexChaine = 0;
 				});
 		return ingredients;
 	}
+	
+	public void isAnInt(char chr, String chaine, int index) {
+		if(this.estUnEntier(chr, chaine, index)) {
+			System.out.println(chaine + " " + chaine.length() + " " + index);
+			chaine.subSequence(0, index).toString();
+			System.out.println(chaine);
+		}
+	}
+	
+	public boolean estUnEntier(char chr, String chaine, int chaineLength) {
+        try {
+        	Character.getNumericValue((char)chaine.charAt(chaineLength));
+        } catch (NumberFormatException e){
+            return false;
+        }
+ 
+        return true;
+    }
 	
 }

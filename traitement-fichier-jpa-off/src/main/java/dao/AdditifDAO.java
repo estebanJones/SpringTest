@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
-import database.ConnectionDatabase;
+import database.ManagerConnection;
 import entities.Ingredient;
 import entities.Magasin;
 import interfaces.migrationCRUD.ICRUDMirgration;
@@ -15,7 +15,7 @@ import interfaces.migrationCRUD.ICRUDMirgration;
 public class AdditifDAO implements ICRUDMirgration{
 
 	@Override
-	public void insertCSV(List<Magasin> mag, ConnectionDatabase connection) throws IOException {
+	public void insertCSV(List<Magasin> mag, ManagerConnection connection) throws IOException {
 		this.formatteAddiif(mag);
 		
 	}

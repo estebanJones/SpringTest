@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
 
-import database.ConnectionDatabase;
+import database.ManagerConnection;
 import entities.Magasin;
 import entities.Marque;
 import interfaces.migrationCRUD.ICRUDMirgration;
@@ -25,16 +25,14 @@ public class MarqueDAO implements ICRUDMirgration{
 	/**
 	 * Insert les marques recuperé dans le csv vers la bdd
 	 */
-	public void insertCSV(List<Magasin> mag, ConnectionDatabase connection) throws IOException {
+	public void insertCSV(List<Magasin> mag, ManagerConnection connection) throws IOException {
 		EntityManager manager = connection.initConnection();
 		Transaction.startTransaction(manager);
 		Set<Marque> marques = this.suppressionDoublon(mag);
 		for(Marque m : marques) {
 			manager.persist(m);
 		}
-
 		Transaction.commitTransaction(manager);
-		connection.closeConnection();
 	}
 	
 	/**
