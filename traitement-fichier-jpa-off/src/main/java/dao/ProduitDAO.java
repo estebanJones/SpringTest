@@ -37,10 +37,8 @@ public class ProduitDAO implements ICRUDMirgration, IProduitBDD {
 		List<Object> resultatRequeteMarque = this.selectAll(manager, "Marque");
 		Set<Produit> produits = this.suppressionDoublonProduit(mag);
 		
-		this.produitLinked(resultatRequeteMarque, resultatRequeteCategorie, produits).forEach(e -> {
-			System.out.println(e);
-			//manager.persist(e);
-			}
+		this.produitLinked(resultatRequeteMarque, resultatRequeteCategorie, produits).forEach(e -> 
+			manager.persist(e)
 		);
 		
 		Transaction.commitTransaction(manager);
@@ -89,7 +87,7 @@ public class ProduitDAO implements ICRUDMirgration, IProduitBDD {
 	
 	public Set<Produit> suppressionDoublonProduit(List<Magasin> magasins) {
 		return magasins.stream()
-					   .map(m -> m.getProduit())
+					   .map(m -> this.createProduit(m))
 					   .distinct()
 					   .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Produit::getNom))));	
 	}
