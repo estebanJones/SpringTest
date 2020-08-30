@@ -9,7 +9,6 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,15 +29,18 @@ public class ProduitDAO implements ICRUDMirgration, IProduitBDD {
 	public ProduitDAO() {}
 	@Override
 	public void insertCSV(List<Magasin> mag, ManagerConnection connection) throws IOException {
-		EntityManager manager = connection.initConnection();
+		EntityManager manager = ManagerConnection.initConnection();
 		Transaction.startTransaction(manager);
 		
 		List<Object> resultatRequeteCategorie = this.selectAll(manager, "Categorie");
 		List<Object> resultatRequeteMarque = this.selectAll(manager, "Marque");
 		Set<Produit> produits = this.suppressionDoublonProduit(mag);
 		
-		this.produitLinked(resultatRequeteMarque, resultatRequeteCategorie, produits).forEach(e -> 
-			manager.persist(e)
+		this.produitLinked(resultatRequeteMarque, resultatRequeteCategorie, produits).forEach(e -> {
+				System.out.println(e);
+				manager.persist(e);
+			}
+			
 		);
 		
 		Transaction.commitTransaction(manager);
@@ -56,11 +58,9 @@ public class ProduitDAO implements ICRUDMirgration, IProduitBDD {
 			resultatRequeteMarque.forEach(e -> {
 				Marque marque = (Marque) e;
 				if(marque.getNom().equalsIgnoreCase(p.getMarque().getNom())) {
-					Produit produit = new Produit(p.getNom());
 					p.setCategorie(p.getCategorie());
-					p.getMarque().setNom(marque.getNom());
-					p.getMarque().setId(marque.getId());
-					
+					p.setMarque(marque);
+
 					marqueProduitLinked.add(p);
 				}
 			});
@@ -75,9 +75,8 @@ public class ProduitDAO implements ICRUDMirgration, IProduitBDD {
 			resultatRequeteCategorie.forEach(e -> {
 				Categorie categorie = (Categorie) e;
 				if(categorie.getNom().equalsIgnoreCase(p.getCategorie().getNom())) {
-				p.getCategorie().setId(categorie.getId());
-				p.getCategorie().setNom(categorie.getNom());
-				categorieProduitLinked.add(p);
+					p.setCategorie(categorie);
+					categorieProduitLinked.add(p);
 				}
 				
 			});
@@ -85,27 +84,16 @@ public class ProduitDAO implements ICRUDMirgration, IProduitBDD {
 		return categorieProduitLinked;
 	}
 	
+	
 	public Set<Produit> suppressionDoublonProduit(List<Magasin> magasins) {
 		return magasins.stream()
-					   .map(m -> this.createProduit(m))
+					   .map(m -> m.getProduit())
 					   .distinct()
 					   .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Produit::getNom))));	
 	}
 	
-	/**
-	 * 
-	 * @param m
-	 * @return
-	 */
-	private Produit createProduit(Magasin m) {
-		Produit produit = new Produit(this.formatteNom(m.getProduit().getNom()));
-		produit.setMarque(m.getProduit().getMarque());
-		produit.setCategorie(m.getProduit().getCategorie());
-		produit.setNutriment(m.getNutriment());
-		return produit;
-	}
 	
-	public String formatteNom(String str) {
+	private String formatteNom(String str) {
 		return StringFormatter.sansAccent(StringUtils.substringBefore(str, ",")).toLowerCase();
 	}
 }

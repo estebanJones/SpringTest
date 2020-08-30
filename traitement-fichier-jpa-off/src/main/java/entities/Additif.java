@@ -18,6 +18,7 @@ public class Additif {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
+	
 	@Column(name="nom", nullable=false, length=50)
 	private String nom;
 	
@@ -25,7 +26,7 @@ public class Additif {
 	@JoinTable(name="compo_addi_prod", joinColumns=@JoinColumn(name="id_additif", referencedColumnName="id"),
 									   inverseJoinColumns=@JoinColumn(name="id_produit", referencedColumnName="id")
 	)
-	private Set<Produit> produitAdditifs;
+	private Set<Produit> produitsAdditifs;
 	
 	
 	public Additif() {}
@@ -50,17 +51,17 @@ public class Additif {
 		this.nom = nom;
 	}
 
-	public Set<Produit> getProduitAdditifs() {
-		return produitAdditifs;
+	public Set<Produit> getProduitsAdditifs() {
+		return produitsAdditifs;
 	}
 
-	public void setProduitAdditifs(Set<Produit> produitAdditifs) {
-		this.produitAdditifs = produitAdditifs;
+	public void setProduitsAdditifs(Set<Produit> produitAdditifs) {
+		this.produitsAdditifs = produitAdditifs;
 	}
 
 	@Override
 	public String toString() {
-		return "Additif [id=" + id + ", nom=" + nom + ", produitAdditifs=" + produitAdditifs + "]";
+		return "Additif [id=" + id + ", nom=" + nom + ", produitAdditifs=" + produitsAdditifs + "]";
 	}
 	
 	

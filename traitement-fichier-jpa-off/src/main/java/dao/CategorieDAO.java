@@ -24,7 +24,7 @@ public class CategorieDAO implements ICRUDMirgration {
 	
 	@Override
 	public void insertCSV(List<Magasin> mag, ManagerConnection connection) throws IOException {
-		EntityManager manager = connection.initConnection();
+		EntityManager manager = ManagerConnection.initConnection();
 		Transaction.startTransaction(manager);
 		
 		Set<Categorie> list = this.suppressionDoublonCategorie(mag);

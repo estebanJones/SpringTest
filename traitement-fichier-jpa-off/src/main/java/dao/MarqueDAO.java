@@ -26,7 +26,7 @@ public class MarqueDAO implements ICRUDMirgration{
 	 * Insert les marques recuperé dans le csv vers la bdd
 	 */
 	public void insertCSV(List<Magasin> mag, ManagerConnection connection) throws IOException {
-		EntityManager manager = connection.initConnection();
+		EntityManager manager = ManagerConnection.initConnection();
 		Transaction.startTransaction(manager);
 		Set<Marque> marques = this.suppressionDoublon(mag);
 		for(Marque m : marques) {

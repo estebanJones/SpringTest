@@ -17,6 +17,7 @@ import entities.Ingredient;
 import entities.Magasin;
 import interfaces.migrationCRUD.ICRUDMirgration;
 import transactiondb.Transaction;
+import utils.StringFormatter;
 
 
 public class IngredientDAO implements ICRUDMirgration {
@@ -25,11 +26,12 @@ public class IngredientDAO implements ICRUDMirgration {
 	
 	@Override
 	public void insertCSV(List<Magasin> mag, ManagerConnection connection) throws IOException {
-		EntityManager manager = connection.initConnection();
+		EntityManager manager = ManagerConnection.initConnection();
 		Transaction.startTransaction(manager);
 		Set<Ingredient> ingredients = this.suppressionDoublon(mag);
 		
 		for(Ingredient i : ingredients) {
+			//System.out.println(i);
 			manager.persist(i);
 		}
 		Transaction.commitTransaction(manager);
@@ -46,61 +48,89 @@ public class IngredientDAO implements ICRUDMirgration {
 				          .map(e -> new Ingredient(e.getNom()))
 				          .distinct()
 				          .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Ingredient::getNom))));
-		
 	}
+	
+	/**
+	 * 
+	 * @param magasins
+	 * @return
+	 */
 	public Set<Ingredient> formatteIngredient(List<Magasin> magasins) {
 		Set<Ingredient> ingredients = new HashSet<>();
 		
 		magasins.stream()
 				.map(el -> el.getIngredient().getNom().split("-|,|;"))
 				.forEach(str -> {
-					Integer indexChaine = 0;
-					for(String s : str) {
-						// Pour chaque Ingredient je remplace _, *, ) par ""
-						s = s.replaceAll("_", "").replaceAll("\\*", "").replace(")", "").trim().toLowerCase();
-						// Je garde que les Ingredients supérieur à 1 caractere
-						if(s.length() > 1 && !s.isEmpty()) {
-							int index = s.length() - 1;
-							// si la fin de la chaine à un point, supprime le.
-							if((char)s.charAt(index) == '.') {
-								s = s.subSequence(0, index).toString();
-							}
-							// Retire toute la chaine après les deux points
-							s = StringUtils.substringBefore(s, ":").trim();		
-							// + veut dire 1 ou + occurence 
-							// $ veut dire check jusqu'a la fin de la ligne
-							// | veut dire Ou
-							// ^ veut dire en debut de ligne
+
+					for(String ingredientName : str) {
+						ingredientName = this.clearIngredientName(ingredientName);
+						
+						if(ingredientName.length() > 1 && !ingredientName.isEmpty()) {
+							StringFormatter.supprimePointFinal(ingredientName);
+							ingredientName = StringUtils.substringBefore(ingredientName, ":").trim();		
 							//Cette regex retire les strings de forme e2467...etc
-							s = s.replaceAll("e[0-9]+$|^e[0-9]+$", "");
+							ingredientName = ingredientName.replaceAll("e[0-9]+$|^e[0-9]+$", "");
 							
-							
-							this.isAnInt((char)s.charAt(indexChaine), s, indexChaine);
-							ingredients.add(new Ingredient(s));
+							if (!this.deleteStringFromInt(ingredientName).isBlank()) {
+								ingredients.add(new Ingredient(this.deleteStringFromInt(ingredientName)));
+							}	
 						}
-						indexChaine++;
 					}
-					indexChaine = 0;
 				});
 		return ingredients;
 	}
 	
-	public void isAnInt(char chr, String chaine, int index) {
-		if(this.estUnEntier(chr, chaine, index)) {
-			System.out.println(chaine + " " + chaine.length() + " " + index);
-			chaine.subSequence(0, index).toString();
-			System.out.println(chaine);
-		}
+	/**
+	 * Nettoie le nom des ingrédients
+	 * @param ingredientName
+	 * @return
+	 */
+	public String clearIngredientName(String ingredientName) {
+		ingredientName = StringFormatter.supprimerCrochet(ingredientName);
+		ingredientName = StringFormatter.supprimerParentheses(ingredientName);
+		ingredientName = StringFormatter.supprimerPointInterrogation(ingredientName);
+		ingredientName = StringFormatter.supprimerSpecialChars(ingredientName);
+		
+		return ingredientName;
 	}
 	
-	public boolean estUnEntier(char chr, String chaine, int chaineLength) {
-        try {
-        	Character.getNumericValue((char)chaine.charAt(chaineLength));
-        } catch (NumberFormatException e){
-            return false;
-        }
- 
-        return true;
+	/**
+	 * Supprime un morceau de la chaine à partir du premier nombre qu'il rencontre
+	 * @param chaine
+	 * @return
+	 */
+	public String deleteStringFromInt(String chaine) {
+		int index = this.estUnEntier(chaine, chaine.length());
+		String newChaine = "";
+		if(index != -1 && index != 0) {
+			newChaine = chaine.subSequence(0, index - 1).toString();
+
+		}
+		return newChaine;
+	}
+	
+	/**
+	 * Check si la lettre est un entier 
+	 * @param chaine
+	 * @param chaineLength
+	 * @return
+	 */
+	public int estUnEntier(String chaine, int chaineLength) {
+		String[] tab = chaine.split("");
+		int suppressFromIndex = 0;
+		if(tab.length > 1) {
+			for(int i=0; i < tab.length; i++) {
+				try {
+					if(Character.isDigit((char)chaine.charAt(i))) {
+						suppressFromIndex = i;
+						break;
+					}
+				} catch (NumberFormatException e){
+					return -1;
+				}
+			}
+		}
+		return suppressFromIndex;
     }
 	
 }

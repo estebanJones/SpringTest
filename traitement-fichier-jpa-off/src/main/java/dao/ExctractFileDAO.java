@@ -2,17 +2,9 @@ package dao;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-
-import entities.Categorie;
-import entities.Ingredient;
-import entities.Magasin;
-import entities.Marque;
-import entities.Nutriment;
-import entities.Produit;
 
 
 public class ExctractFileDAO {

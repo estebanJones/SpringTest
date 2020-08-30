@@ -39,8 +39,9 @@ public class EntiteMigrationService {
 	public void persistEntities(List<Magasin> mag, ManagerConnection connection) throws IOException {
 //		this.marqueDAO.insertCSV(mag, connection);
 //		this.categorieDAO.insertCSV(mag, connection);
-//		this.ingredientDAO.insertCSV(mag, connection);
-		this.produitDAO.insertCSV(mag, connection);
+		this.ingredientDAO.insertCSV(mag, connection);
+//		this.additifDAO.insertCSV(mag, connection);
+		//this.produitDAO.insertCSV(mag, connection);
 	}
 	
 	public void close() {

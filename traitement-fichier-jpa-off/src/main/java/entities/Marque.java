@@ -1,6 +1,5 @@
 package entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -18,8 +17,10 @@ public class Marque {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
+	
 	@Column(name="nom", nullable=false, length=50)
 	private String nom;
+	
 	@OneToMany(mappedBy="marque")
 	private List<Produit> produits;
 	

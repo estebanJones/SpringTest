@@ -37,8 +37,11 @@ public class Produit {
 	@ManyToMany(mappedBy="produitsAllergenes")
 	private Set<Allergene> allergenes;
 	
-	@ManyToMany(mappedBy="produitAdditifs")
+	@ManyToMany(mappedBy="produitsAdditifs")
 	private Set<Additif> additifs;
+	
+	@ManyToMany(mappedBy="produitsIngredients")
+	private Set<Ingredient> ingredients;
 	
 	public Produit() {
 		
@@ -104,6 +107,15 @@ public class Produit {
 
 	public void setAdditifs(Set<Additif> additifs) {
 		this.additifs = additifs;
+	}
+	
+	
+	public Set<Ingredient> getIngredients() {
+		return ingredients;
+	}
+
+	public void setIngredients(Set<Ingredient> ingredients) {
+		this.ingredients = ingredients;
 	}
 
 	@Override

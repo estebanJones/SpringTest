@@ -5,7 +5,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class ManagerConnection {
-	private EntityManager em;
 	private static EntityManagerFactory factory;
 	private static final String PERSISTANCEAME = "bdd_foodFact";
 	
