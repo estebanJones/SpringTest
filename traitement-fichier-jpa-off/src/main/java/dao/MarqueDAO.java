@@ -18,6 +18,11 @@ import interfaces.migrationCRUD.ICRUDMirgration;
 import transactiondb.Transaction;
 import utils.StringFormatter;
 
+/**
+ * 
+ * @author Jordan
+ *
+ */
 public class MarqueDAO implements ICRUDMirgration{
 
 	public MarqueDAO() {}
@@ -28,10 +33,10 @@ public class MarqueDAO implements ICRUDMirgration{
 	public void insertCSV(List<Magasin> mag, ManagerConnection connection) throws IOException {
 		EntityManager manager = ManagerConnection.initConnection();
 		Transaction.startTransaction(manager);
+		
 		Set<Marque> marques = this.suppressionDoublon(mag);
-		for(Marque m : marques) {
-			manager.persist(m);
-		}
+		marques.forEach(marque -> manager.persist(marque));
+
 		Transaction.commitTransaction(manager);
 	}
 	
@@ -46,5 +51,4 @@ public class MarqueDAO implements ICRUDMirgration{
 						.distinct()
 						.collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Marque::getNom))));				
 	}		
-	
 }

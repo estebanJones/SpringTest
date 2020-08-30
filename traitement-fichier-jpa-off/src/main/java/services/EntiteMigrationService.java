@@ -36,14 +36,23 @@ public class EntiteMigrationService {
 		return new EntiteMigrationService();
 	}
 	
+	/**
+	 * Insert les differentes entités du fichier en base
+	 * @param mag
+	 * @param connection
+	 * @throws IOException
+	 */
 	public void persistEntities(List<Magasin> mag, ManagerConnection connection) throws IOException {
 //		this.marqueDAO.insertCSV(mag, connection);
 //		this.categorieDAO.insertCSV(mag, connection);
 		this.ingredientDAO.insertCSV(mag, connection);
 //		this.additifDAO.insertCSV(mag, connection);
-		//this.produitDAO.insertCSV(mag, connection);
+//		this.produitDAO.insertCSV(mag, connection);
 	}
 	
+	/**
+	 * Ferme le pipe avec la base de donnée
+	 */
 	public void close() {
 		connection.close();
 	}

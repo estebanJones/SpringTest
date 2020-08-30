@@ -43,29 +43,29 @@ public class FileDAO {
 		for(String line : lignes) {
 			Categorie categorie = new Categorie(line.split("\\|", -1)[0]);
 			Marque marque = new Marque(line.split("\\|", -1)[1]);
-			Nutriment nutriment = new Nutriment(this.preventOutOfBounds(line, 5), 
-												this.preventOutOfBounds(line, 6), 
-												this.preventOutOfBounds(line, 7), 
-												this.preventOutOfBounds(line, 8), 
-												this.preventOutOfBounds(line, 9), 
-												this.preventOutOfBounds(line, 10), 
-												this.preventOutOfBounds(line, 11), 
-												this.preventOutOfBounds(line, 12), 
-												this.preventOutOfBounds(line, 13), 
-												this.preventOutOfBounds(line, 14),
-												this.preventOutOfBounds(line, 15), 
-												this.preventOutOfBounds(line, 16), 
-												this.preventOutOfBounds(line, 17), 
-												this.preventOutOfBounds(line, 18), 
-												this.preventOutOfBounds(line, 19), 
-												this.preventOutOfBounds(line, 20), 
-												this.preventOutOfBounds(line, 21), 
-												this.preventOutOfBounds(line, 22),
-												this.preventOutOfBounds(line, 23), 
-												this.preventOutOfBounds(line, 24), 
-												this.preventOutOfBounds(line, 25), 
-												this.preventOutOfBounds(line, 26),
-												(this.preventOutOfBounds(line, 27) == 0.0) ? false : true
+			Nutriment nutriment = new Nutriment(this.preventOutOfBoundsInteger(line, 5), 
+												this.preventOutOfBoundsInteger(line, 6), 
+												this.preventOutOfBoundsInteger(line, 7), 
+												this.preventOutOfBoundsInteger(line, 8), 
+												this.preventOutOfBoundsInteger(line, 9), 
+												this.preventOutOfBoundsInteger(line, 10), 
+												this.preventOutOfBoundsInteger(line, 11), 
+												this.preventOutOfBoundsInteger(line, 12), 
+												this.preventOutOfBoundsInteger(line, 13), 
+												this.preventOutOfBoundsInteger(line, 14),
+												this.preventOutOfBoundsInteger(line, 15), 
+												this.preventOutOfBoundsInteger(line, 16), 
+												this.preventOutOfBoundsInteger(line, 17), 
+												this.preventOutOfBoundsInteger(line, 18), 
+												this.preventOutOfBoundsInteger(line, 19), 
+												this.preventOutOfBoundsInteger(line, 20), 
+												this.preventOutOfBoundsInteger(line, 21), 
+												this.preventOutOfBoundsInteger(line, 22),
+												this.preventOutOfBoundsInteger(line, 23), 
+												this.preventOutOfBoundsInteger(line, 24), 
+												this.preventOutOfBoundsInteger(line, 25), 
+												this.preventOutOfBoundsInteger(line, 26),
+												(this.preventOutOfBoundsInteger(line, 27) == 0.0) ? false : true
 										);
 			Produit produit = new Produit(line.split("\\|", -1)[2]);
 			produit.setMarque(marque);
@@ -73,8 +73,8 @@ public class FileDAO {
 			produit.setNutriment(nutriment);
 			
 			Ingredient ingredient = new Ingredient(line.split("\\|", -1)[4]);
-			Allergene allergene = new Allergene(this.prevent(line, 28));
-			Additif additif = new Additif(this.prevent(line, 29));
+			Allergene allergene = new Allergene(this.preventOutOfBoundsString(line, 28));
+			Additif additif = new Additif(this.preventOutOfBoundsString(line, 29));
 			
 			listMagasins.add(new Magasin(produit, ingredient, nutriment, allergene, additif));
 		}
@@ -82,7 +82,7 @@ public class FileDAO {
 	}
 	
 
-	private double preventOutOfBounds(String line, int index) {
+	private double preventOutOfBoundsInteger(String line, int index) {
 		if(line.split("\\|", -1).length > index) {
 			return this.checkDoubleLine(line.split("\\|", -1)[index]);
 		} else {
@@ -90,7 +90,7 @@ public class FileDAO {
 		}
 	}
 	
-	private String prevent(String line, int index) {
+	private String preventOutOfBoundsString(String line, int index) {
 		if(line.split("\\|", -1).length > index) {
 			return this.checkStringLine(line.split("\\|", -1)[index]);
 		} else {
@@ -113,6 +113,11 @@ public class FileDAO {
 		return value;
 	}
 	
+	/**
+	 * Verifie si la ligne est vide
+	 * @param str
+	 * @return
+	 */
 	private String checkStringLine(String str) {
 		if(str.isBlank() || str.isEmpty()) {
 			return "Empty";

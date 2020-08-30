@@ -33,6 +33,12 @@ public class ProduitDAO implements ICRUDMirgration, IProduitBDD {
 		Transaction.commitTransaction(manager);
 	}
 	
+	/**
+	 * Va construire un Set<Produit> avec les liaisons 
+	 * @param magasin
+	 * @param manager
+	 * @return
+	 */
 	private Set<Produit> constructProduit(List<Magasin> magasin, EntityManager manager) {
 		List<Object> resultatRequeteCategorie = this.selectAll(manager, TableEnum.CATEGORIE.toString());
 		List<Object> resultatRequeteMarque = this.selectAll(manager, TableEnum.MARQUE.toString());

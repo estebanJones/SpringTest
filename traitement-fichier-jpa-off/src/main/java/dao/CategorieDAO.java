@@ -18,6 +18,11 @@ import interfaces.migrationCRUD.ICRUDMirgration;
 import transactiondb.Transaction;
 import utils.StringFormatter;
 
+/**
+ * 
+ * @author Jordan
+ *
+ */
 public class CategorieDAO implements ICRUDMirgration {
 	
 	public CategorieDAO() {}
@@ -42,11 +47,12 @@ public class CategorieDAO implements ICRUDMirgration {
 		
 	}
 	
+	/**
+	 * Retourne un objet Categorie avec le nom formatter
+	 * @param m
+	 * @return
+	 */
 	private Categorie createCategorie(Magasin m) {
-		return new Categorie(this.formatteNom(m.getProduit().getCategorie().getNom()));
-	}
-	
-	public String formatteNom(String str) {
-		return StringFormatter.sansAccent(StringUtils.substringBefore(str, ",")).toLowerCase();
+		return new Categorie(StringFormatter.sansAccent(m.getProduit().getCategorie().getNom()));
 	}
 }
