@@ -29,7 +29,6 @@ public class CategorieDAO implements ICRUDMirgration {
 		
 		Set<Categorie> list = this.suppressionDoublonCategorie(mag);
 		for(Categorie p : list) {
-			
 			manager.persist(p);
 		}
 		Transaction.commitTransaction(manager);
