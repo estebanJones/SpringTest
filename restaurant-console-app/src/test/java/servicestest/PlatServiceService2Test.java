@@ -31,7 +31,6 @@ class PlatServiceService2Test {
 	@BeforeEach
 	public void init() {
 		dao = Mockito.mock(PlatDaoMemoire.class);
-		service2 = new PlatServiceVersion2(dao);
 	}
 	
 	@Test
