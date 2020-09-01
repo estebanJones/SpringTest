@@ -9,6 +9,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
@@ -20,10 +21,10 @@ import dev.exception.PlatException;
 @Repository
 @PropertySource("app.properties")
 public class PlatDaoFichier implements IPlatDao {
-
     private String fichierStockage;
-
-    public PlatDaoFichier(String fichierStockage) {
+    
+  
+    public PlatDaoFichier(@Value("${fichier}")String fichierStockage) {
         this.fichierStockage = fichierStockage;
         if (!Files.exists(Paths.get(this.fichierStockage))) {
             try {

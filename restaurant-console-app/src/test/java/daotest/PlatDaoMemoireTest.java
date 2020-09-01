@@ -1,29 +1,38 @@
 package daotest;
 
-import static org.junit.jupiter.api.Assertions.fail;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import dev.dao.PlatDaoMemoire;
+import dev.entite.Plat;
 
 class PlatDaoMemoireTest {
 	private PlatDaoMemoire platDaoMemoire;
 	
 	@BeforeEach
 	public void init() {
-		PlatDaoMemoire platDaoMemoire = new PlatDaoMemoire();
+		platDaoMemoire = new PlatDaoMemoire();
 	}
 	
-	
-	@Test
 	public void listerPlatsVideInitialisation() {
-		platDaoMemoire.listerPlats();
+		List<Plat> list = platDaoMemoire.listerPlats();
+		assertThat(list.isEmpty());
 	}
 	
 	@Test
 	public void ajouterPlatCasPassants() {
 		
+		Plat plat = new Plat("Looool", 6);
+		platDaoMemoire.ajouterPlat("Looool", 6);
+		
+		List<Plat> list = platDaoMemoire.listerPlats();
+
+		assertThat(list.get(0).getNom().equalsIgnoreCase(plat.getNom()));
 	}
 
 }
