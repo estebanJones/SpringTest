@@ -9,8 +9,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +23,7 @@ import dev.exception.PlatException;
 @Primary
 @Repository
 @PropertySource("app.properties")
+@Profile({"fichier", "fichier2"})
 public class PlatDaoFichier implements IPlatDao {
     private String fichierStockage;
     
@@ -60,4 +64,6 @@ public class PlatDaoFichier implements IPlatDao {
             throw new PlatException("fichier non trouvé " + fichierStockage);
         }
     }
+
+	
 }

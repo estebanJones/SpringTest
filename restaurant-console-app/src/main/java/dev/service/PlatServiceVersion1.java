@@ -1,14 +1,20 @@
 package dev.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 import dev.dao.IPlatDao;
 import dev.entite.Plat;
 import dev.exception.PlatException;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-@Component
+@Primary
+@Service
+@Profile({"jdbc", "jpaconf", "memoire", "fichier"})
 public class PlatServiceVersion1 implements IPlatService {
 
     private IPlatDao dao;

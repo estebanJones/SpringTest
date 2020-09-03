@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
 
 import dev.exception.PlatException;
 import dev.ihm.options.IOptionMenu;
@@ -13,6 +14,7 @@ import dev.ihm.options.OptionListerPlats;
 import dev.ihm.options.OptionTerminer;
 import dev.service.IPlatService;
 
+@Controller
 public class MenuBean {
 	private Map<Integer, IOptionMenu> actions = new HashMap<>();
 

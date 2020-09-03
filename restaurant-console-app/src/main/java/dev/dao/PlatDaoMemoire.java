@@ -3,11 +3,13 @@ package dev.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import dev.entite.Plat;
 
 @Repository
+@Profile({"memoire", "memoire2"})
 public class PlatDaoMemoire implements IPlatDao {
 
     private List<Plat> listePlats = new ArrayList<>();
@@ -22,4 +24,6 @@ public class PlatDaoMemoire implements IPlatDao {
         Plat nouveauPlat = new Plat(nomPlat, prixPlat);
         listePlats.add(nouveauPlat);
     }
+
+
 }

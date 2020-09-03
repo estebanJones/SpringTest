@@ -10,14 +10,13 @@ import dev.ihm.Menu;
 public class AppSpringJava {
 	public static void main(String...args) {
 		
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-		Menu menu = context.getBean(Menu.class);
-		
-		menu.afficher();
-		
-		context.getBean(Scanner.class).close();
-
-		context.close();
-		
+		try(AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+			context.register(AppConfig.class);
+			context.getEnvironment().setActiveProfiles("jpa");
+			context.refresh();
+			Menu menu = context.getBean(Menu.class);
+			menu.afficher();
+			context.getBean(Scanner.class).close();
+		}
 	}
 }
