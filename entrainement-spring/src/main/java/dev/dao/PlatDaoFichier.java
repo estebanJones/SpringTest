@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +19,7 @@ import dev.exception.PlatException;
 
 @Repository
 @PropertySource("app.properties")
+@Profile("daoFichier")
 public class PlatDaoFichier implements IPlatDao {
     private String fichierStockage;
     
