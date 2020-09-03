@@ -9,8 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="ingredient")
 public class Ingredient {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -19,7 +21,7 @@ public class Ingredient {
 	private String nom;
 	
 	@ManyToMany
-    @JoinTable(name="compo_ingre_plat", joinColumns=@JoinColumn(name="id_ingredient", referencedColumnName="id"),
+    @JoinTable(name="plat_ingredient", joinColumns=@JoinColumn(name="id_ingredient", referencedColumnName="id"),
     							  inverseJoinColumns=@JoinColumn(name="id_plat", referencedColumnName="id")
     )
 	private List<Plat> plats;

@@ -11,8 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="plat")
 public class Plat {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
