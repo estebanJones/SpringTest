@@ -9,23 +9,20 @@ import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 
 import dev.entite.Plat;
 import dev.exception.PlatException;
 
-
+@Repository
+@PropertySource("app.properties")
 public class PlatDaoFichier implements IPlatDao {
     private String fichierStockage;
     
   
-    public PlatDaoFichier(String fichierStockage) {
+    public PlatDaoFichier(@Value("${fichier}")String fichierStockage) {
         this.fichierStockage = fichierStockage;
         if (!Files.exists(Paths.get(this.fichierStockage))) {
             try {
@@ -33,6 +30,7 @@ public class PlatDaoFichier implements IPlatDao {
             } catch (IOException e) {
                 throw new PlatException("Impossible de créer le fichier " + this.fichierStockage, e);
             }
+            
         }
     }
 

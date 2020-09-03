@@ -9,7 +9,7 @@ import dev.dao.IPlatDao;
 import dev.entite.Plat;
 import dev.exception.PlatException;
 
-
+@Service
 public class PlatServiceVersion2 implements IPlatService {
 	@Autowired
     private IPlatDao dao;
